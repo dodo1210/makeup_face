@@ -1,16 +1,23 @@
-import sys
-import cv2
-import time
 from PIL import Image, ImageColor
-from sklearn.cluster import KMeans
-from statistics import mean, mode, median
+import cv2
+import sys
 import numpy as np
+import pandas as pd
+from statistics import mean,median
 
 def rgb_to_hex(rgb):
     return '%02x%02x%02x' % rgb
 
+def mean_color(beg,end,all):
+    list = []
+    count = 0
+    for beg in range(end):
+        list.append(int(str(np.percentile(all,beg)).split('.')[0]))
+    print(median(list))
+    return str(mean(list)).split('.')[0]
+
 # Read the image
-name = 'lamcome'
+name = '06_studio_fix'
 image = cv2.imread('base_raw/'+name+'.png')
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 faceCascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
@@ -47,17 +54,12 @@ for (x, y, w, h) in faces:
     rgb = (ImageColor.getcolor('#'+hex(int(str(np.percentile(all,20)).split('.')[0])).split('0x')[1], "RGB"))
     print((rgb[0]*299+rgb[1]*587+rgb[2]*114)/1000)
     if ((rgb[0]*299+rgb[1]*587+rgb[2]*114)/1000)>64 and ((rgb[0]*299+rgb[1]*587+rgb[2]*114)/1000)<=96:
-        print("1")
-        print(hex(int(str(np.percentile(all,30)).split('.')[0])).split('0x')[1])
+        print(hex(int(str(np.percentile(all,20)).split('.')[0])).split('0x')[1])
     elif ((rgb[0]*299+rgb[1]*587+rgb[2]*114)/1000)>96 and ((rgb[0]*299+rgb[1]*587+rgb[2]*114)/1000)<=128:
-        print("2")
         print(hex(int(str(np.percentile(all,45)).split('.')[0])).split('0x')[1])
     elif ((rgb[0]*299+rgb[1]*587+rgb[2]*114)/1000)>128 and ((rgb[0]*299+rgb[1]*587+rgb[2]*114)/1000)<=160:
-        print("3")
         print(hex(int(str(np.percentile(all,55)).split('.')[0])).split('0x')[1])
     elif ((rgb[0]*299+rgb[1]*587+rgb[2]*114)/1000)>160 and ((rgb[0]*299+rgb[1]*587+rgb[2]*114)/1000)<=192:
-        print("4")
-        print(hex(int(str(np.percentile(all,75)).split('.')[0])).split('0x')[1])
+        print(hex(int(str(np.percentile(all,65)).split('.')[0])).split('0x')[1])
     elif ((rgb[0]*299+rgb[1]*587+rgb[2]*114)/1000)>32 and ((rgb[0]*299+rgb[1]*587+rgb[2]*114)/1000)<=64:
-        print("5")
         print(hex(int(str(np.percentile(all,75)).split('.')[0])).split('0x')[1])

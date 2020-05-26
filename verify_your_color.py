@@ -1,22 +1,19 @@
-import sys
-import cv2
-import time
 from PIL import Image, ImageColor
-from sklearn.cluster import KMeans
-from statistics import mean, mode, median
+import cv2
+import sys
 import numpy as np
 import pandas as pd
 
 data = pd.read_csv("base.csv")
 
+name = 'naara3'
+image = cv2.imread(name+'.png')
+
 def rgb_to_hex(rgb):
     return '%02x%02x%02x' % rgb
 
-# Insert image
-name = 'davi'
-image = cv2.imread('base_raw/'+name+'.png')
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-#Identify face
+
 faceCascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
 faces = faceCascade.detectMultiScale(
     gray,
@@ -25,8 +22,7 @@ faces = faceCascade.detectMultiScale(
     minSize=(30, 30)
 )
 
-#Get number faces in picture
-print("Found {0} Faces!".format(len(faces)))
+print("[INFO] Found {0} Faces!".format(len(faces)))
 
 count = 0
 color = []
@@ -36,7 +32,7 @@ for (x, y, w, h) in faces:
     hexa = []
     integer = []
 
-    roi_color = image[y+10:y-10 + h-10, x+10:x-10+ w-10]
+    roi_color = image[y+50:y-50 + h-50, x+50:x-50+ w-50]
 
     print("[INFO] Object found. Saving locally.")
     #save face
@@ -60,6 +56,8 @@ for (x, y, w, h) in faces:
     get = 0
     count = 0
     mininum = 256
+    marca = []
+    modelo = []
     for d in data['Color']:
         light_rgb = ImageColor.getcolor('#'+str(d), "RGB")
         light_data = ((light_rgb[0]*299+light_rgb[1]*587+light_rgb[2]*114)/1000)
@@ -70,6 +68,4 @@ for (x, y, w, h) in faces:
             get = count
             mininum = diference
         count+=1
-    print("Sua base eh:"+data['Base'][get])
-
-    
+    print("Sua base eh:"+data['Marca'][get]+" "+data['Modelo'][get])
